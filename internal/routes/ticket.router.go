@@ -14,6 +14,7 @@ func ticketRoutes(route fiber.Router, repository models.ITicketRepository) {
 
 	privateRoutes.Get("/", ticketController.GetMany)
 	privateRoutes.Post("/", ticketController.CreateOne)
-	privateRoutes.Get(":/ticketId", ticketController.GetOne)
-	privateRoutes.Put(":/ticketId", ticketController.UpdateOne)
+	privateRoutes.Get("/:ticketId", ticketController.GetOne)
+	privateRoutes.Put("/:ticketId", ticketController.UpdateOne)
+	privateRoutes.Delete("/:ticketId", ticketController.DeleteOne)
 }

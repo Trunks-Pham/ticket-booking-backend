@@ -18,8 +18,9 @@ type Ticket struct {
 }
 
 type ITicketRepository interface {
-	GetMany(ctx context.Context) ([]*Ticket, error)
+	GetMany(ctx context.Context, eventId *uint) ([]*Ticket, error)
 	GetOne(ctx context.Context, ticketId uint) (*Ticket, error)
-	CreateOne(ctx context.Context) (*Ticket, error)
+	CreateOne(ctx context.Context, ticket *Ticket) (*Ticket, error)
 	UpdateOne(ctx context.Context, ticketId uint, updateData map[string]interface{}) (*Ticket, error)
+	DeleteOne(ctx context.Context, ticketId uint) error
 }

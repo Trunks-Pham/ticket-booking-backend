@@ -11,10 +11,16 @@ type TicketRepository struct {
 	db *gorm.DB
 }
 
-func (r *TicketRepository) GetMany(ctx context.Context) ([]*models.Ticket, error) {
+func (r *TicketRepository) GetMany(ctx context.Context, flightId *uint) ([]*models.Ticket, error) {
 	tickets := []*models.Ticket{}
 
-	res := r.db.Model(&models.Ticket{}).Preload("Event").Find(&tickets)
+	query := r.db.Model(&models.Ticket{})
+
+	if flightId != nil {
+		query = query.Where("flight_id = ?", *flightId)
+	}
+
+	res := query.Preload("Flight").Find(&tickets)
 
 	if res.Error != nil {
 		return nil, res.Error
@@ -26,7 +32,7 @@ func (r *TicketRepository) GetMany(ctx context.Context) ([]*models.Ticket, error
 func (r *TicketRepository) GetOne(ctx context.Context, ticketId uint) (*models.Ticket, error) {
 	ticket := &models.Ticket{}
 
-	res := r.db.Model(ticket).Where("id = ?", ticketId).Preload("Event").First(ticket)
+	res := r.db.Model(ticket).Where("id = ?", ticketId).Preload("Flight").First(ticket)
 
 	if res.Error != nil {
 		return nil, res.Error
@@ -35,9 +41,7 @@ func (r *TicketRepository) GetOne(ctx context.Context, ticketId uint) (*models.T
 	return ticket, nil
 }
 
-func (r *TicketRepository) CreateOne(ctx context.Context) (*models.Ticket, error) {
-	ticket := &models.Ticket{}
-
+func (r *TicketRepository) CreateOne(ctx context.Context, ticket *models.Ticket) (*models.Ticket, error) {
 	res := r.db.Model(ticket).Create(ticket)
 
 	if res.Error != nil {
@@ -57,6 +61,11 @@ func (r *TicketRepository) UpdateOne(ctx context.Context, ticketId uint, updateD
 	}
 
 	return r.GetOne(ctx, ticketId)
+}
+
+func (r *TicketRepository) DeleteOne(ctx context.Context, ticketId uint) error {
+	res := r.db.Delete(&models.Ticket{}, "id = ?", ticketId)
+	return res.Error
 }
 
 func NewTicketRepository() models.ITicketRepository {

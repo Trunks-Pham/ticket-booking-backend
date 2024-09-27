@@ -81,7 +81,7 @@ func (h *FlightController) CreateOne(ctx *fiber.Ctx) error {
 
 	return ctx.Status(fiber.StatusCreated).JSON(&fiber.Map{
 		"status":  "success",
-		"message": "Event created",
+		"message": "Flight created",
 		"data":    flightAfterCreate,
 	})
 }
@@ -113,7 +113,7 @@ func (h *FlightController) UpdateOne(ctx *fiber.Ctx) error {
 
 	return ctx.Status(fiber.StatusCreated).JSON(&fiber.Map{
 		"status":  "success",
-		"message": "Event updated",
+		"message": "Flight updated",
 		"data":    flightAfterUpdate,
 	})
 }
