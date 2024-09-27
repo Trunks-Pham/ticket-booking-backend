@@ -1,7 +1,6 @@
 package models
 
 import (
-	"context"
 	"gorm.io/gorm"
 )
 
@@ -15,12 +14,4 @@ type Ticket struct {
 	AvailableSeat int              `json:"availableSeat"`
 	Status        bool             `json:"status" gorm:"default:true"`
 	Bookings      []BookingHistory `json:"bookings" gorm:"foreignKey:TicketID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-}
-
-type ITicketRepository interface {
-	GetMany(ctx context.Context, eventId *uint) ([]*Ticket, error)
-	GetOne(ctx context.Context, ticketId uint) (*Ticket, error)
-	CreateOne(ctx context.Context, ticket *Ticket) (*Ticket, error)
-	UpdateOne(ctx context.Context, ticketId uint, updateData map[string]interface{}) (*Ticket, error)
-	DeleteOne(ctx context.Context, ticketId uint) error
 }

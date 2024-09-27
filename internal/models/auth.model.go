@@ -1,7 +1,6 @@
 package models
 
 import (
-	"context"
 	"net/mail"
 
 	"golang.org/x/crypto/bcrypt"
@@ -20,16 +19,6 @@ type RegisterCredentials struct {
 type LoginCredentials struct {
 	Email    string `json:"email" validate:"required"`
 	Password string `json:"password" validate:"required"`
-}
-
-type IAuthRepository interface {
-	RegisterUser(ctx context.Context, registerData *RegisterCredentials) (*User, error)
-	GetUser(ctx context.Context, query interface{}, args ...interface{}) (*User, error)
-}
-
-type IAuthService interface {
-	Login(ctx context.Context, loginData *LoginCredentials) (string, *User, error)
-	Register(ctx context.Context, registerData *RegisterCredentials) (string, *User, error)
 }
 
 // Check if a password matches a hash

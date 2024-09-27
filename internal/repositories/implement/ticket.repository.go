@@ -1,9 +1,10 @@
-package repositories
+package implement
 
 import (
 	"context"
 	"github.com/Trunks-Pham/ticket-booking-backend/global"
 	"github.com/Trunks-Pham/ticket-booking-backend/internal/models"
+	"github.com/Trunks-Pham/ticket-booking-backend/internal/repositories"
 	"gorm.io/gorm"
 )
 
@@ -68,7 +69,7 @@ func (r *TicketRepository) DeleteOne(ctx context.Context, ticketId uint) error {
 	return res.Error
 }
 
-func NewTicketRepository() models.ITicketRepository {
+func NewTicketRepository() repositories.ITicketRepository {
 	return &TicketRepository{
 		db: global.Pdb,
 	}

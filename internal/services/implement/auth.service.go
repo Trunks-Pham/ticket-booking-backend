@@ -1,10 +1,12 @@
-package services
+package implement
 
 import (
 	"context"
 	"errors"
 	"fmt"
 	"github.com/Trunks-Pham/ticket-booking-backend/global"
+	"github.com/Trunks-Pham/ticket-booking-backend/internal/repositories"
+	"github.com/Trunks-Pham/ticket-booking-backend/internal/services"
 	"github.com/Trunks-Pham/ticket-booking-backend/pkg/settings"
 	"time"
 
@@ -16,7 +18,7 @@ import (
 )
 
 type AuthService struct {
-	repository models.IAuthRepository
+	repository repositories.IAuthRepository
 	config     settings.Config
 }
 
@@ -89,7 +91,7 @@ func (s *AuthService) Register(ctx context.Context, registerData *models.Registe
 	return token, user, nil
 }
 
-func NewAuthService(repository models.IAuthRepository) models.IAuthService {
+func NewAuthService(repository repositories.IAuthRepository) services.IAuthService {
 	return &AuthService{
 		repository: repository,
 		config:     global.Config,

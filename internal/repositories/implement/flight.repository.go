@@ -1,7 +1,8 @@
-package repositories
+package implement
 
 import (
 	"context"
+	"github.com/Trunks-Pham/ticket-booking-backend/internal/repositories"
 
 	"github.com/Trunks-Pham/ticket-booking-backend/global"
 	"github.com/Trunks-Pham/ticket-booking-backend/internal/models"
@@ -63,7 +64,7 @@ func (r *FlightRepository) DeleteOne(ctx context.Context, flightId uint) error {
 	return res.Error
 }
 
-func NewFlightRepository() models.IFlightRepository {
+func NewFlightRepository() repositories.IFlightRepository {
 	return &FlightRepository{
 		db: global.Pdb,
 	}

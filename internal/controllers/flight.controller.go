@@ -3,6 +3,7 @@ package controllers
 import (
 	"context"
 	"github.com/Trunks-Pham/ticket-booking-backend/internal/models"
+	"github.com/Trunks-Pham/ticket-booking-backend/internal/repositories"
 	"strconv"
 	"time"
 
@@ -10,7 +11,7 @@ import (
 )
 
 type FlightController struct {
-	repository models.IFlightRepository
+	repository repositories.IFlightRepository
 }
 
 func (h *FlightController) GetMany(ctx *fiber.Ctx) error {
@@ -136,7 +137,7 @@ func (h *FlightController) DeleteOne(ctx *fiber.Ctx) error {
 	return ctx.SendStatus(fiber.StatusNoContent)
 }
 
-func NewFlightController(IFlightRepository models.IFlightRepository) *FlightController {
+func NewFlightController(IFlightRepository repositories.IFlightRepository) *FlightController {
 	return &FlightController{
 		repository: IFlightRepository,
 	}

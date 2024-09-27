@@ -1,8 +1,9 @@
-package repositories
+package implement
 
 import (
 	"context"
 	"github.com/Trunks-Pham/ticket-booking-backend/global"
+	"github.com/Trunks-Pham/ticket-booking-backend/internal/repositories"
 
 	"github.com/Trunks-Pham/ticket-booking-backend/internal/models"
 	"gorm.io/gorm"
@@ -37,7 +38,7 @@ func (r *AuthRepository) GetUser(ctx context.Context, query interface{}, args ..
 	return user, nil
 }
 
-func NewAuthRepository() models.IAuthRepository {
+func NewAuthRepository() repositories.IAuthRepository {
 	return &AuthRepository{
 		db: global.Pdb,
 	}
