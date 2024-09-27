@@ -1,0 +1,11 @@
+server:
+  port: 8080
+postgreSql:
+  host: 127.0.0.1
+  dbname: flightbooking
+  username: postgres
+  password: Nvidia_geforce940mx
+  port: 5432
+  sslmode: disable
+authentication:
+  jwtScretKey: acb12345CC

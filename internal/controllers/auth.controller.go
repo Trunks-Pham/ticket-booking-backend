@@ -1,42 +1,42 @@
-package handlers
+package controllers
 
 import (
 	"context"
 	"fmt"
 	"time"
 
+	"github.com/Trunks-Pham/ticket-booking-backend/internal/models"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
-	"github.com/mathvaillant/ticket-booking-project-v0/models"
 )
 
 var validate = validator.New()
 
-type AuthHandler struct {
-	service models.AuthService
+type AuthController struct {
+	service models.IAuthService
 }
 
-func (h *AuthHandler) Login(ctx *fiber.Ctx) error {
-	creds := &models.AuthCredentials{}
+func (h *AuthController) Login(ctx *fiber.Ctx) error {
+	loginCreds := &models.LoginCredentials{}
 
-	context, cancel := context.WithTimeout(context.Background(), time.Duration(5*time.Second))
+	ctxWithTimeout, cancel := context.WithTimeout(context.Background(), time.Duration(5*time.Second))
 	defer cancel()
 
-	if err := ctx.BodyParser(&creds); err != nil {
+	if err := ctx.BodyParser(&loginCreds); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
 			"status":  "fail",
 			"message": err.Error(),
 		})
 	}
 
-	if err := validate.Struct(creds); err != nil {
+	if err := validate.Struct(loginCreds); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
 			"status":  "fail",
 			"message": err.Error(),
 		})
 	}
 
-	token, user, err := h.service.Login(context, creds)
+	token, user, err := h.service.Login(ctxWithTimeout, loginCreds)
 
 	if err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
@@ -55,27 +55,28 @@ func (h *AuthHandler) Login(ctx *fiber.Ctx) error {
 	})
 }
 
-func (h *AuthHandler) Register(ctx *fiber.Ctx) error {
-	creds := &models.AuthCredentials{}
+func (h *AuthController) Register(ctx *fiber.Ctx) error {
+	fmt.Printf("cc")
+	registerCreds := &models.RegisterCredentials{}
 
-	context, cancel := context.WithTimeout(context.Background(), time.Duration(5*time.Second))
+	ctxWithTimeout, cancel := context.WithTimeout(context.Background(), time.Duration(5*time.Second))
 	defer cancel()
 
-	if err := ctx.BodyParser(&creds); err != nil {
+	if err := ctx.BodyParser(&registerCreds); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
 			"status":  "fail",
 			"message": err.Error(),
 		})
 	}
 
-	if err := validate.Struct(creds); err != nil {
+	if err := validate.Struct(registerCreds); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
 			"status":  "fail",
-			"message": fmt.Errorf("please, provide a valid name, email and password").Error(),
+			"message": fmt.Errorf("please, provide a valid information").Error(),
 		})
 	}
 
-	token, user, err := h.service.Register(context, creds)
+	token, user, err := h.service.Register(ctxWithTimeout, registerCreds)
 
 	if err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
@@ -94,11 +95,8 @@ func (h *AuthHandler) Register(ctx *fiber.Ctx) error {
 	})
 }
 
-func NewAuthHandler(route fiber.Router, service models.AuthService) {
-	handler := &AuthHandler{
+func NewAuthController(service models.IAuthService) *AuthController {
+	return &AuthController{
 		service: service,
 	}
-
-	route.Post("/login", handler.Login)
-	route.Post("/register", handler.Register)
 }

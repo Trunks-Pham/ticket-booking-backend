@@ -3,17 +3,19 @@ package middlewares
 import (
 	"errors"
 	"fmt"
-	"os"
+	"github.com/Trunks-Pham/ticket-booking-backend/global"
+	"github.com/Trunks-Pham/ticket-booking-backend/internal/models"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/mathvaillant/ticket-booking-project-v0/models"
 	"gorm.io/gorm"
 )
 
-func AuthProtected(db *gorm.DB) fiber.Handler {
+func AuthProtected() fiber.Handler {
+	db := global.Pdb
+	cf := global.Config
 	return func(ctx *fiber.Ctx) error {
 		authHeader := ctx.Get("Authorization")
 
@@ -38,7 +40,7 @@ func AuthProtected(db *gorm.DB) fiber.Handler {
 		}
 
 		tokenStr := tokenParts[1]
-		secret := []byte(os.Getenv("JWT_SECRET"))
+		secret := []byte(cf.Authentication.JwtScretKey)
 
 		token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 			if token.Method.Alg() != jwt.GetSigningMethod("HS256").Alg() {

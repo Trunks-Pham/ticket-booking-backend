@@ -2,8 +2,9 @@ package repositories
 
 import (
 	"context"
+	"github.com/Trunks-Pham/ticket-booking-backend/global"
 
-	"github.com/mathvaillant/ticket-booking-project-v0/models"
+	"github.com/Trunks-Pham/ticket-booking-backend/internal/models"
 	"gorm.io/gorm"
 )
 
@@ -11,7 +12,7 @@ type AuthRepository struct {
 	db *gorm.DB
 }
 
-func (r *AuthRepository) RegisterUser(ctx context.Context, registerData *models.AuthCredentials) (*models.User, error) {
+func (r *AuthRepository) RegisterUser(ctx context.Context, registerData *models.RegisterCredentials) (*models.User, error) {
 	user := &models.User{
 		Email:    registerData.Email,
 		Password: registerData.Password,
@@ -36,8 +37,8 @@ func (r *AuthRepository) GetUser(ctx context.Context, query interface{}, args ..
 	return user, nil
 }
 
-func NewAuthRepository(db *gorm.DB) models.AuthRepository {
+func NewAuthRepository() models.IAuthRepository {
 	return &AuthRepository{
-		db: db,
+		db: global.Pdb,
 	}
 }

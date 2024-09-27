@@ -4,3 +4,6 @@ start:
 stop:
 	@docker-compose rm -v --force --stop
 	@docker rmi ticket-booking
+
+run:
+	go run ./cmd/api/main.go/

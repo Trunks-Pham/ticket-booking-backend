@@ -4,21 +4,23 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"os"
+	"github.com/Trunks-Pham/ticket-booking-backend/global"
+	"github.com/Trunks-Pham/ticket-booking-backend/pkg/settings"
 	"time"
 
+	"github.com/Trunks-Pham/ticket-booking-backend/internal/models"
+	"github.com/Trunks-Pham/ticket-booking-backend/utils"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/mathvaillant/ticket-booking-project-v0/models"
-	"github.com/mathvaillant/ticket-booking-project-v0/utils"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 type AuthService struct {
-	repository models.AuthRepository
+	repository models.IAuthRepository
+	config     settings.Config
 }
 
-func (s *AuthService) Login(ctx context.Context, loginData *models.AuthCredentials) (string, *models.User, error) {
+func (s *AuthService) Login(ctx context.Context, loginData *models.LoginCredentials) (string, *models.User, error) {
 	user, err := s.repository.GetUser(ctx, "email = ?", loginData.Email)
 
 	if err != nil {
@@ -38,7 +40,7 @@ func (s *AuthService) Login(ctx context.Context, loginData *models.AuthCredentia
 		"exp":  time.Now().Add(time.Hour * 168).Unix(),
 	}
 
-	token, err := utils.GenerateJWT(claims, jwt.SigningMethodHS256, os.Getenv("JWT_SECRET"))
+	token, err := utils.GenerateJWT(claims, jwt.SigningMethodHS256, s.config.Authentication.JwtScretKey)
 
 	if err != nil {
 		return "", nil, err
@@ -47,9 +49,13 @@ func (s *AuthService) Login(ctx context.Context, loginData *models.AuthCredentia
 	return token, user, nil
 }
 
-func (s *AuthService) Register(ctx context.Context, registerData *models.AuthCredentials) (string, *models.User, error) {
+func (s *AuthService) Register(ctx context.Context, registerData *models.RegisterCredentials) (string, *models.User, error) {
 	if !models.IsValidEmail(registerData.Email) {
 		return "", nil, fmt.Errorf("please, provide a valid email to register")
+	}
+
+	if registerData.IdentityID == "" && registerData.Passport == "" {
+		return "", nil, fmt.Errorf("please, provide at least one of identityID or register")
 	}
 
 	if _, err := s.repository.GetUser(ctx, "email = ?", registerData.Email); !errors.Is(err, gorm.ErrRecordNotFound) {
@@ -75,7 +81,7 @@ func (s *AuthService) Register(ctx context.Context, registerData *models.AuthCre
 	}
 
 	// Generate the JWT
-	token, err := utils.GenerateJWT(claims, jwt.SigningMethodHS256, os.Getenv("JWT_SECRET"))
+	token, err := utils.GenerateJWT(claims, jwt.SigningMethodHS256, s.config.Authentication.JwtScretKey)
 	if err != nil {
 		return "", nil, err
 	}
@@ -83,8 +89,9 @@ func (s *AuthService) Register(ctx context.Context, registerData *models.AuthCre
 	return token, user, nil
 }
 
-func NewAuthService(repository models.AuthRepository) models.AuthService {
+func NewAuthService(repository models.IAuthRepository) models.IAuthService {
 	return &AuthService{
 		repository: repository,
+		config:     global.Config,
 	}
 }
