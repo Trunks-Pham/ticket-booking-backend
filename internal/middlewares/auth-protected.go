@@ -59,7 +59,6 @@ func AuthProtected() fiber.Handler {
 		}
 
 		userId := token.Claims.(jwt.MapClaims)["id"]
-		role := token.Claims.(jwt.MapClaims)["role"]
 
 		if err := db.Model(&models.User{}).Where("id = ?", userId).Error; errors.Is(err, gorm.ErrRecordNotFound) {
 			log.Warnf("user not found in the db")
@@ -71,7 +70,7 @@ func AuthProtected() fiber.Handler {
 		}
 
 		ctx.Locals("userId", userId)
-		ctx.Locals("role", role)
+
 		return ctx.Next()
 	}
 }

@@ -3,9 +3,9 @@ package initialize
 import (
 	"fmt"
 	"github.com/Trunks-Pham/ticket-booking-backend/global"
-	"github.com/Trunks-Pham/ticket-booking-backend/internal/repositories/implement"
+	"github.com/Trunks-Pham/ticket-booking-backend/internal/repositories"
 	"github.com/Trunks-Pham/ticket-booking-backend/internal/routes"
-	implement2 "github.com/Trunks-Pham/ticket-booking-backend/internal/services/implement"
+	"github.com/Trunks-Pham/ticket-booking-backend/internal/services"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -25,12 +25,12 @@ func Run() {
 	})
 
 	// Repository
-	flightRepository := implement.NewFlightRepository()
-	ticketRepository := implement.NewTicketRepository()
-	authRepository := implement.NewAuthRepository()
+	flightRepository := repositories.NewFlightRepository()
+	ticketRepository := repositories.NewTicketRepository()
+	authRepository := repositories.NewAuthRepository()
 
 	// Service
-	authService := implement2.NewAuthService(authRepository)
+	authService := services.NewAuthService(authRepository)
 
 	// Setup routes
 	routes.SetupRoutes(app, authService, flightRepository, ticketRepository)

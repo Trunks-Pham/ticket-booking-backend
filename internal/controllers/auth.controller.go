@@ -3,7 +3,6 @@ package controllers
 import (
 	"context"
 	"fmt"
-	"github.com/Trunks-Pham/ticket-booking-backend/internal/services"
 	"time"
 
 	"github.com/Trunks-Pham/ticket-booking-backend/internal/models"
@@ -14,7 +13,7 @@ import (
 var validate = validator.New()
 
 type AuthController struct {
-	service services.IAuthService
+	service models.IAuthService
 }
 
 func (h *AuthController) Login(ctx *fiber.Ctx) error {
@@ -96,7 +95,7 @@ func (h *AuthController) Register(ctx *fiber.Ctx) error {
 	})
 }
 
-func NewAuthController(service services.IAuthService) *AuthController {
+func NewAuthController(service models.IAuthService) *AuthController {
 	return &AuthController{
 		service: service,
 	}

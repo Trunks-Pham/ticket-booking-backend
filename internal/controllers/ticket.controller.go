@@ -3,7 +3,6 @@ package controllers
 import (
 	"context"
 	"fmt"
-	"github.com/Trunks-Pham/ticket-booking-backend/internal/repositories"
 	"strconv"
 	"time"
 
@@ -12,29 +11,16 @@ import (
 )
 
 type TicketController struct {
-	repository repositories.ITicketRepository
+	repository models.ITicketRepository
 }
 
 func (h *TicketController) GetMany(ctx *fiber.Ctx) error {
-	flightIdStr := ctx.Query("flightId")
-	var flightId *uint
-
-	if flightIdStr != "" {
-		id, err := strconv.ParseUint(flightIdStr, 10, 32)
-		if err != nil {
-			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"status":  "fail",
-				"message": "Invalid Event ID",
-			})
-		}
-		idUint := uint(id)
-		flightId = &idUint
-	}
+	fmt.Print("cc")
 
 	ctxWithTimeout, cancel := context.WithTimeout(context.Background(), time.Duration(5*time.Second))
 	defer cancel()
 
-	tickets, err := h.repository.GetMany(ctxWithTimeout, flightId)
+	tickets, err := h.repository.GetMany(ctxWithTimeout)
 
 	if err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
@@ -88,10 +74,9 @@ func (h *TicketController) CreateOne(ctx *fiber.Ctx) error {
 		})
 	}
 
-	ticketResponse, err := h.repository.CreateOne(ctxWithTimeout, ticket)
+	ticketResponse, err := h.repository.CreateOne(ctxWithTimeout)
 
 	if err != nil {
-		fmt.Printf("Error creating ticket: %v\n", err)
 		return ctx.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
 			"status":  "fail",
 			"message": err.Error(),
@@ -138,25 +123,7 @@ func (h *TicketController) UpdateOne(ctx *fiber.Ctx) error {
 	})
 }
 
-func (h *TicketController) DeleteOne(ctx *fiber.Ctx) error {
-	ticketId, _ := strconv.Atoi(ctx.Params("ticketId"))
-
-	ctxWithTimeout, cancel := context.WithTimeout(context.Background(), time.Duration(5*time.Second))
-	defer cancel()
-
-	err := h.repository.DeleteOne(ctxWithTimeout, uint(ticketId))
-
-	if err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(&fiber.Map{
-			"status":  "fail",
-			"message": err.Error(),
-		})
-	}
-
-	return ctx.SendStatus(fiber.StatusNoContent)
-}
-
-func NewTicketController(ITicketRepository repositories.ITicketRepository) *TicketController {
+func NewTicketController(ITicketRepository models.ITicketRepository) *TicketController {
 	return &TicketController{
 		repository: ITicketRepository,
 	}

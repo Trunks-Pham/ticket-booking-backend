@@ -3,7 +3,6 @@ package controllers
 import (
 	"context"
 	"github.com/Trunks-Pham/ticket-booking-backend/internal/models"
-	"github.com/Trunks-Pham/ticket-booking-backend/internal/repositories"
 	"strconv"
 	"time"
 
@@ -11,7 +10,7 @@ import (
 )
 
 type FlightController struct {
-	repository repositories.IFlightRepository
+	repository models.IFlightRepository
 }
 
 func (h *FlightController) GetMany(ctx *fiber.Ctx) error {
@@ -82,7 +81,7 @@ func (h *FlightController) CreateOne(ctx *fiber.Ctx) error {
 
 	return ctx.Status(fiber.StatusCreated).JSON(&fiber.Map{
 		"status":  "success",
-		"message": "Flight created",
+		"message": "Event created",
 		"data":    flightAfterCreate,
 	})
 }
@@ -114,7 +113,7 @@ func (h *FlightController) UpdateOne(ctx *fiber.Ctx) error {
 
 	return ctx.Status(fiber.StatusCreated).JSON(&fiber.Map{
 		"status":  "success",
-		"message": "Flight updated",
+		"message": "Event updated",
 		"data":    flightAfterUpdate,
 	})
 }
@@ -137,7 +136,7 @@ func (h *FlightController) DeleteOne(ctx *fiber.Ctx) error {
 	return ctx.SendStatus(fiber.StatusNoContent)
 }
 
-func NewFlightController(IFlightRepository repositories.IFlightRepository) *FlightController {
+func NewFlightController(IFlightRepository models.IFlightRepository) *FlightController {
 	return &FlightController{
 		repository: IFlightRepository,
 	}
