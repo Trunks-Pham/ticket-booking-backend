@@ -1,0 +1,23 @@
+{
+    "schemes": [
+        "http"
+    ],
+    "swagger": "2.0",
+    "info": {
+        "description": "Đây là API đặt vé máy bay",
+        "title": "Ticket Booking API Documentation",
+        "termsOfService": "http://yourapi.com/terms/",
+        "contact": {
+            "name": "Hỗ Trợ API",
+            "email": "support@yourapi.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
+    "paths": {}
+}

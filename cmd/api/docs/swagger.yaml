@@ -1,0 +1,17 @@
+basePath: /api/v1
+host: localhost:8080
+info:
+  contact:
+    email: support@yourapi.com
+    name: Hỗ Trợ API
+  description: Đây là API đặt vé máy bay
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://yourapi.com/terms/
+  title: Ticket Booking API Documentation
+  version: "1.0"
+paths: {}
+schemes:
+- http
+swagger: "2.0"
