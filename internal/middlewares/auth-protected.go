@@ -58,7 +58,8 @@ func AuthProtected() fiber.Handler {
 			})
 		}
 
-		userId := token.Claims.(jwt.MapClaims)["id"]
+		userIdFloat := token.Claims.(jwt.MapClaims)["id"].(float64)
+		userId := uint(userIdFloat)
 		role := token.Claims.(jwt.MapClaims)["role"]
 
 		if err := db.Model(&models.User{}).Where("id = ?", userId).Error; errors.Is(err, gorm.ErrRecordNotFound) {

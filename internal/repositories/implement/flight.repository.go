@@ -16,7 +16,7 @@ type FlightRepository struct {
 func (r *FlightRepository) GetMany(ctx context.Context) ([]*models.Flight, error) {
 	flights := []*models.Flight{}
 
-	res := r.db.Model(&models.Flight{}).Find(&flights)
+	res := r.db.Model(&models.Flight{}).Preload("Ticket").Find(&flights)
 
 	if res.Error != nil {
 		return nil, res.Error
@@ -26,15 +26,15 @@ func (r *FlightRepository) GetMany(ctx context.Context) ([]*models.Flight, error
 }
 
 func (r *FlightRepository) GetOne(ctx context.Context, flightId uint) (*models.Flight, error) {
-	event := &models.Flight{}
+	flight := &models.Flight{}
 
-	res := r.db.Model(event).Where("id = ?", flightId).First(event)
+	res := r.db.Model(flight).Preload("Ticket").Where("id = ?", flightId).First(flight)
 
 	if res.Error != nil {
 		return nil, res.Error
 	}
 
-	return event, nil
+	return flight, nil
 }
 
 func (r *FlightRepository) CreateOne(ctx context.Context, flight *models.Flight) (*models.Flight, error) {

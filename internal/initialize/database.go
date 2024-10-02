@@ -28,9 +28,9 @@ func InitPostgreSql() {
 
 	log.Info("Connected to the database")
 
-	//if err := DBMigrator(db); err != nil {
-	//	log.Fatalf("Unable to migrate: %v", err)
-	//}
+	if err := DBMigrator(db); err != nil {
+		log.Fatalf("Unable to migrate: %v", err)
+	}
 
 	global.Pdb = db
 }

@@ -11,6 +11,8 @@ func SetupRoutes(
 	authService services.IAuthService,
 	flightRepository repositories.IFlightRepository,
 	ticketRepository repositories.ITicketRepository,
+	bookingService services.IBookingHistoryService,
+	bookingRepository repositories.IBookingHistoryRepository,
 ) {
 	api := app.Group("/api")
 
@@ -19,4 +21,6 @@ func SetupRoutes(
 	flightRoutes(api.Group("/flight"), flightRepository)
 
 	ticketRoutes(api.Group("/tickets"), ticketRepository)
+
+	bookingRoutes(api.Group("/bookings"), bookingService, bookingRepository)
 }
