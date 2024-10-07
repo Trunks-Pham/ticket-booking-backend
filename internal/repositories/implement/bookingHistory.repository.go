@@ -80,7 +80,7 @@ func (b BookingHistoryRepository) CreateOne(ctx context.Context, bookingHistory 
 func (b BookingHistoryRepository) UpdateOne(ctx context.Context, bookingHistoryId uint, updateData map[string]interface{}) (*models.BookingHistory, error) {
 	bookingHistory := &models.BookingHistory{}
 
-	updateRes := b.db.Model(bookingHistory).Where("id = ?", bookingHistoryId).Preload("User").Preload("Ticket").Updates(updateData)
+	updateRes := b.db.Model(bookingHistory).Where("id = ?", bookingHistoryId).Preload("User").Updates(updateData)
 
 	if updateRes.Error != nil {
 		return nil, updateRes.Error
